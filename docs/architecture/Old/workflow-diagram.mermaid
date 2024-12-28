@@ -1,0 +1,15 @@
+stateDiagram-v2
+    [*] --> PlanCreation: Admin crée plan mensuel
+    PlanCreation --> CalculCotisations: Système calcule
+    CalculCotisations --> NotificationAbonnes: Système notifie
+    
+    NotificationAbonnes --> AttentePaiement: Abonné notifié
+    AttentePaiement --> PaiementRecu: Abonné paie
+    AttentePaiement --> PaiementRetard: Délai dépassé
+    
+    PaiementRetard --> RelanceAutomatique: Système relance
+    RelanceAutomatique --> AttentePaiement
+    
+    PaiementRecu --> ValidationPaiement: Admin vérifie
+    ValidationPaiement --> GenerationRecu: Système génère
+    GenerationRecu --> [*]

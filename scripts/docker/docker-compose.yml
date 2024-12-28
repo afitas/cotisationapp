@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  db:
+    # ... configuration inchangée ...
+
+  backend:
+    build: 
+      context: ../../backend
+      dockerfile: ../scripts/docker/backend.Dockerfile
+    # ... reste de la configuration ...
+
+  frontend:
+    build:
+      context: ../../frontend
+      dockerfile: ../scripts/docker/frontend.Dockerfile
+    # ... reste de la configuration ... 

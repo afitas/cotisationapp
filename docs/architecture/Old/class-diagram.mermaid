@@ -1,0 +1,81 @@
+classDiagram
+    class CustomUser {
+        +int id
+        +string username
+        +string password
+        +string email
+        +string role
+        +string nom
+        +string prenom
+        +string telephone
+        +string address
+        +string bloc
+        +int nombre_voitures
+        +decimal frais_conciergerie
+        +boolean est_actif
+        +datetime date_creation
+        +datetime derniere_modification
+        +creerAnnonce()
+        +effectuerPaiement()
+    }
+
+    class Plan {
+        +int id
+        +string name
+        +int mois
+        +int annee
+        +decimal montant_conciergerie
+        +decimal montant_par_voiture
+        +boolean est_actif
+        +datetime created_at
+        +datetime updated_at
+        +calculerCotisation()
+    }
+
+    class Annonce {
+        +int id
+        +string titre
+        +text contenu
+        +boolean est_cotisable
+        +datetime date_creation
+        +boolean est_active
+        +creerProjet()
+    }
+
+    class Projet {
+        +int id
+        +string nom
+        +text description
+        +decimal cout_total
+        +date date_debut
+        +date date_fin
+        +string statut
+        +calculerCoutParBloc()
+        +genererCotisations()
+    }
+
+    class Cotisation {
+        +int id
+        +decimal total_montant
+        +datetime created_at
+        +datetime updated_at
+        +enregistrerPaiement()
+        +calculerTotal()
+    }
+
+    class Payment {
+        +int id
+        +decimal amount
+        +text remarks
+        +string type
+        +datetime date_created
+        +datetime date_updated
+        +genererRecu()
+    }
+
+    CustomUser "1" -- "*" Annonce
+    CustomUser "1" -- "*" Cotisation
+    Plan "1" -- "*" Cotisation
+    Annonce "1" -- "*" Projet
+    Projet "1" -- "*" Cotisation
+    Cotisation "1" -- "*" Payment

@@ -1,0 +1,101 @@
+erDiagram
+    CUSTOM_USER {
+        int id PK
+        string username
+        string password
+        string email
+        string role "admin/abonne"
+        string nom
+        string prenom
+        string telephone
+        string address
+        string bloc "Null pour admin"
+        int nombre_voitures "Null pour admin"
+        decimal frais_conciergerie "Null pour admin"
+        boolean est_actif
+        datetime date_creation
+        datetime derniere_modification
+    }
+
+    PLAN {
+        int id PK
+        string name
+        int mois
+        int annee
+        decimal montant_conciergerie
+        decimal montant_par_voiture
+        boolean est_actif
+        datetime created_at
+        datetime updated_at
+    }
+
+    ANNONCE {
+        int id PK
+        string titre
+        text contenu
+        boolean est_cotisable
+        datetime date_creation
+        int created_by FK "CUSTOM_USER ID"
+        boolean est_active
+    }
+
+    PROJET {
+        int id PK
+        int annonce_id FK
+        string nom
+        text description
+        decimal cout_total
+        date date_debut
+        date date_fin
+        string statut
+        datetime created_at
+    }
+
+    PROJET_BLOC {
+        int id PK
+        int projet_id FK
+        string bloc
+        boolean est_inclus
+    }
+
+    COTISATION_PROJET {
+        int id PK
+        int projet_id FK
+        int user_id FK "CUSTOM_USER ID"
+        decimal montant_calcule
+        boolean est_paye
+        datetime date_paiement
+        string statut
+    }
+
+    COTISATION {
+        int id PK
+        int user_id FK "CUSTOM_USER ID"
+        int plan_id FK
+        decimal total_montant
+        datetime created_at
+        datetime updated_at
+    }
+
+    PAYMENT {
+        int id PK
+        int cotisation_id FK "Peut être null"
+        int cotisation_projet_id FK "Peut être null"
+        decimal amount
+        text remarks
+        string type "mensuel/projet"
+        datetime date_created
+        datetime date_updated
+        int created_by FK "CUSTOM_USER ID"
+    }
+
+    CUSTOM_USER ||--o{ ANNONCE : "crée"
+    CUSTOM_USER ||--o{ COTISATION : "a"
+    CUSTOM_USER ||--o{ COTISATION_PROJET : "participe"
+    CUSTOM_USER ||--o{ PAYMENT : "effectue/enregistre"
+    PLAN ||--o{ COTISATION : "concerne"
+    ANNONCE ||--o{ PROJET : "peut avoir"
+    PROJET ||--o{ PROJET_BLOC : "concerne"
+    PROJET ||--o{ COTISATION_PROJET : "génère"
+    COTISATION ||--o{ PAYMENT : "reçoit"
+    COTISATION_PROJET ||--o{ PAYMENT : "reçoit"

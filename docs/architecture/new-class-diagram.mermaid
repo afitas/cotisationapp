@@ -1,0 +1,95 @@
+classDiagram
+    class CustomUser {
+        +int id
+        +string username
+        +string password
+        +string email
+        +string role
+        +string nom
+        +string prenom
+        +string telephone
+        +string address
+        +string bloc
+        +int nombre_voitures
+        +boolean est_actif
+        +datetime date_creation
+        +datetime derniere_modification
+        +creerAnnonce()
+        +effectuerPaiement()
+    }
+
+    class AnneeAbonnement {
+        +int id
+        +int annee
+        +boolean est_actif
+        +boolean est_cloture
+        +datetime date_creation
+        +datetime date_cloture
+        +cloturer_annee()
+        +creer_abonnements_nouvelle_annee()
+    }
+
+    class PlanMensuel {
+        +int id
+        +int mois
+        +decimal montant_conciergerie
+        +decimal montant_par_voiture
+        +date date_limite_paiement
+        +datetime created_at
+        +datetime updated_at
+        +creer_plans_annee()
+        +calculer_montant()
+    }
+
+    class Cotisation {
+        +int id
+        +decimal montant_total
+        +string statut
+        +datetime date_paiement
+        +datetime created_at
+        +datetime updated_at
+        +calculer_montant()
+        +enregistrerPaiement()
+        +creer_cotisations_mensuelles()
+    }
+
+    class Annonce {
+        +int id
+        +string titre
+        +text contenu
+        +boolean est_cotisable
+        +datetime date_creation
+        +boolean est_active
+        +creerProjet()
+    }
+
+    class Projet {
+        +int id
+        +string nom
+        +text description
+        +decimal cout_total
+        +date date_debut
+        +date date_fin
+        +string statut
+        +calculerCoutParBloc()
+        +genererCotisations()
+    }
+
+    class Payment {
+        +int id
+        +decimal amount
+        +text remarks
+        +string type
+        +datetime date_created
+        +datetime date_updated
+        +genererRecu()
+    }
+
+    CustomUser "1" -- "*" AnneeAbonnement
+    AnneeAbonnement "1" -- "*" PlanMensuel
+    PlanMensuel "1" -- "*" Cotisation
+    CustomUser "1" -- "*" Cotisation
+    CustomUser "1" -- "*" Annonce
+    Annonce "1" -- "*" Projet
+    Projet "1" -- "*" Cotisation
+    Cotisation "1" -- "*" Payment

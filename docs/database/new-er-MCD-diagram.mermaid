@@ -1,0 +1,116 @@
+erDiagram
+    CUSTOM_USER {
+        int id PK
+        string username
+        string password
+        string email
+        string role "admin/abonne"
+        string nom
+        string prenom
+        string telephone
+        string address
+        string bloc "Null pour admin"
+        int nombre_voitures "Null pour admin"
+        boolean est_actif
+        datetime date_creation
+        datetime derniere_modification
+    }
+
+    ANNEE_ABONNEMENT {
+        int id PK
+        int annee
+        boolean est_actif
+        boolean est_cloture
+        datetime date_creation
+        datetime date_cloture
+        int created_by FK "CUSTOM_USER ID"
+    }
+
+    PLAN_MENSUEL {
+        int id PK
+        int annee_id FK
+        int mois "1-12"
+        decimal montant_conciergerie
+        decimal montant_par_voiture
+        date date_limite_paiement
+        datetime created_at
+        datetime updated_at
+        int created_by FK "CUSTOM_USER ID"
+    }
+
+    COTISATION {
+        int id PK
+        int user_id FK
+        int plan_id FK
+        decimal montant_total
+        string statut "en_attente/paye/en_retard/annule"
+        datetime date_paiement
+        int created_by FK
+        datetime created_at
+        datetime updated_at
+    }
+
+    ANNONCE {
+        int id PK
+        string titre
+        text contenu
+        boolean est_cotisable
+        datetime date_creation
+        int created_by FK
+        boolean est_active
+    }
+
+    PROJET {
+        int id PK
+        int annonce_id FK
+        string nom
+        text description
+        decimal cout_total
+        date date_debut
+        date date_fin
+        string statut
+        datetime created_at
+    }
+
+    PROJET_BLOC {
+        int id PK
+        int projet_id FK
+        string bloc
+        boolean est_inclus
+    }
+
+    COTISATION_PROJET {
+        int id PK
+        int projet_id FK
+        int user_id FK
+        decimal montant_calcule
+        boolean est_paye
+        datetime date_paiement
+        string statut
+    }
+
+    PAYMENT {
+        int id PK
+        int cotisation_id FK "Peut être null"
+        int cotisation_projet_id FK "Peut être null"
+        decimal amount
+        text remarks
+        string type "mensuel/projet"
+        datetime date_created
+        datetime date_updated
+        int created_by FK
+    }
+
+    CUSTOM_USER ||--o{ ANNEE_ABONNEMENT : "crée"
+    CUSTOM_USER ||--o{ PLAN_MENSUEL : "crée"
+    CUSTOM_USER ||--o{ COTISATION : "a"
+    ANNEE_ABONNEMENT ||--o{ PLAN_MENSUEL : "contient"
+    PLAN_MENSUEL ||--o{ COTISATION : "génère"
+    CUSTOM_USER ||--o{ ANNONCE : "crée"
+    CUSTOM_USER ||--o{ COTISATION_PROJET : "participe"
+    CUSTOM_USER ||--o{ PAYMENT : "effectue/enregistre"
+    ANNONCE ||--o{ PROJET : "peut avoir"
+    PROJET ||--o{ PROJET_BLOC : "concerne"
+    PROJET ||--o{ COTISATION_PROJET : "génère"
+    COTISATION ||--o{ PAYMENT : "reçoit"
+    COTISATION_PROJET ||--o{ PAYMENT : "reçoit"

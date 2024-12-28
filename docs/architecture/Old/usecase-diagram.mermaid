@@ -1,0 +1,23 @@
+graph TD
+    subgraph Administrateur
+        A[Administrateur] --> B[Gérer les abonnés]
+        A --> C[Gérer les plans]
+        A --> D[Créer des annonces]
+        A --> E[Gérer les projets]
+        A --> F[Enregistrer paiements]
+        A --> G[Voir statistiques]
+    end
+
+    subgraph Abonné
+        H[Abonné] --> I[Consulter cotisations]
+        H --> J[Voir historique paiements]
+        H --> K[Voir annonces]
+        H --> L[Recevoir notifications]
+    end
+
+    subgraph Système
+        M[Système] --> N[Calculer cotisations]
+        M --> O[Générer factures]
+        M --> P[Envoyer notifications]
+        M --> Q[Générer rapports]
+    end

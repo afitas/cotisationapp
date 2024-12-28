@@ -1,0 +1,51 @@
+stateDiagram-v2
+    state GestionAnnee {
+        [*] --> NouvelleAnnee
+        NouvelleAnnee --> PlanificationMensuelle
+        PlanificationMensuelle --> CalculCotisations
+        CalculCotisations --> NotificationAbonnes
+        NotificationAbonnes --> AttenteReglements
+        AttenteReglements --> ClotureAnnee
+        ClotureAnnee --> [*]
+    }
+
+    state CyclePaiement {
+        [*] --> EnAttente
+        EnAttente --> Paye: Paiement reçu
+        EnAttente --> EnRetard: Date limite dépassée
+        EnRetard --> Paye: Paiement tardif
+        EnRetard --> Annule: Non-paiement prolongé
+        Paye --> [*]
+        Annule --> [*]
+    }
+
+    state GestionProjet {
+        [*] --> CreationAnnonce
+        CreationAnnonce --> ProjetInitie: Si cotisable
+        ProjetInitie --> CalculCoutsBlocs
+        CalculCoutsBlocs --> ValidationProjet
+        ValidationProjet --> GenerationCotisationsProjet
+        GenerationCotisationsProjet --> SuiviPaiements
+        SuiviPaiements --> ClotureProjet
+        ClotureProjet --> [*]
+    }
+
+    state SystemeNotification {
+        [*] --> VerificationEcheances
+        VerificationEcheances --> EnvoiRappels: Si proche échéance
+        VerificationEcheances --> NotificationRetard: Si en retard
+        EnvoiRappels --> MiseAJourStatuts
+        NotificationRetard --> MiseAJourStatuts
+        MiseAJourStatuts --> GenerationRapports
+        GenerationRapports --> [*]
+    }
+
+    note right of NouvelleAnnee: Création automatique des plans mensuels pour l'année
+    note right of CalculCotisations: Calcul basé sur montant conciergerie et nombre de voitures
+    note right of ProjetInitie: Définition des blocs concernés et calcul des coûts par bloc
+
+    [*] --> GestionAnnee
+    GestionAnnee --> CyclePaiement
+    CyclePaiement --> SystemeNotification
+    GestionAnnee --> GestionProjet: Si projet spécial
+    GestionProjet --> CyclePaiement: Génération cotisations

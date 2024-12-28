@@ -1,0 +1,66 @@
+stateDiagram-v2
+    state GestionAnnee {
+        [*] --> NouvelleAnnee
+        NouvelleAnnee --> PlanificationMensuelle
+        PlanificationMensuelle --> CalculCotisations
+        CalculCotisations --> NotificationAbonnes
+        NotificationAbonnes --> AttenteReglements
+        AttenteReglements --> ValidationComptes
+        ValidationComptes --> ClotureAnnee
+        ClotureAnnee --> [*]
+
+        state AttenteReglements {
+            [*] --> VerificationPaiements
+            VerificationPaiements --> RelancesPaiements
+            RelancesPaiements --> MiseAJourStatuts
+        }
+    }
+
+    state CyclePaiement {
+        [*] --> EnAttente
+        EnAttente --> Paye: Paiement reçu
+        EnAttente --> EnRetard: Date limite dépassée
+        EnRetard --> Paye: Paiement tardif
+        EnRetard --> Suspendu: Après 3 relances
+        Suspendu --> Paye: Régularisation
+        Suspendu --> Annule: Non-paiement prolongé
+        Paye --> [*]
+        Annule --> [*]
+    }
+
+    state GestionProjet {
+        [*] --> CreationAnnonce
+        CreationAnnonce --> ValidationInitiale
+        ValidationInitiale --> ProjetInitie: Si cotisable
+        ProjetInitie --> CalculCoutsBlocs
+        CalculCoutsBlocs --> ValidationProjet
+        ValidationProjet --> GenerationCotisationsProjet
+        GenerationCotisationsProjet --> SuiviPaiements
+        SuiviPaiements --> ExecutionProjet
+        ExecutionProjet --> ClotureProjet
+        ClotureProjet --> [*]
+    }
+
+    state SystemeNotification {
+        [*] --> VerificationEcheances
+        VerificationEcheances --> EnvoiRappels: Si proche échéance
+        VerificationEcheances --> NotificationRetard: Si en retard
+        VerificationEcheances --> AlertesSuspension: Si multiples retards
+        EnvoiRappels --> MiseAJourStatuts
+        NotificationRetard --> MiseAJourStatuts
+        AlertesSuspension --> MiseAJourStatuts
+        MiseAJourStatuts --> GenerationRapports
+        GenerationRapports --> [*]
+    }
+
+    note right of NouvelleAnnee: Initialisation des paramètres annuels
+    note right of ValidationComptes: Vérification des comptes en fin d'année
+    note right of ExecutionProjet: Suivi de l'avancement du projet
+    note right of AlertesSuspension: Notification avant suspension de compte
+
+    [*] --> GestionAnnee
+    GestionAnnee --> CyclePaiement
+    CyclePaiement --> SystemeNotification
+    GestionAnnee --> GestionProjet: Si projet spécial
+    GestionProjet --> CyclePaiement: Génération cotisations
+    SystemeNotification --> GestionAnnee: Mise à jour statuts
