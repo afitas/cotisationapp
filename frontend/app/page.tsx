@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import api from '@/lib/axios'
+import { AuthService } from '@/lib/auth'
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
@@ -17,20 +17,8 @@ export default function LoginPage() {
     setError('')
 
     try {
-      const response = await api.post('/auth/token/', {
-        username,
-        password
-      })
-
-      console.log('Login response:', response.data)
-
-      const { access, user } = response.data
-      localStorage.setItem('token', access)
-      localStorage.setItem('user', JSON.stringify(user))
-
-      // Configuration du token pour les futures requêtes
-      api.defaults.headers.Authorization = `Bearer ${access}`
-
+      const user = await AuthService.login(username, password)
+      
       if (user.role === 'admin') {
         router.push('/admin')
       } else {
@@ -38,7 +26,7 @@ export default function LoginPage() {
       }
     } catch (err: any) {
       console.error('Login error:', err)
-      setError(err.response?.data?.detail || 'Erreur de connexion')
+      setError(err.response?.data?.detail || 'Identifiants incorrects')
     } finally {
       setIsLoading(false)
     }

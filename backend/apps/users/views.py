@@ -2,9 +2,10 @@ from rest_framework import viewsets, generics, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import CustomUser
-from .serializers import UserSerializer, UserDetailSerializer
+from .serializers import UserSerializer, UserDetailSerializer, CustomTokenObtainPairSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -34,3 +35,6 @@ class MeView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data) 
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer 
